@@ -26,7 +26,7 @@ constexpr region_handle uninitialised_region_handle = region_handle();
 static std::unordered_map<std::string, region_handle> regions;
 static std::unordered_map<std::string, region_handle> rewind_regions;
 
-void region_begin(const std::string& region_name, std::string module, std::string file_name,
+void region_begin(const std::string& region_name, const CString& module, const CString& file_name,
                   std::uint64_t line_number)
 {
     auto& region_handle = regions[region_name];
@@ -36,8 +36,17 @@ void region_begin(const std::string& region_name, std::string module, std::strin
         SCOREP_User_RegionInit(&region_handle.value, NULL, &SCOREP_User_LastFileHandle,
                                region_name.c_str(), SCOREP_USER_REGION_TYPE_FUNCTION,
                                file_name.c_str(), line_number);
-        SCOREP_User_RegionSetGroup(region_handle.value,
-                                   std::string(module, 0, module.find('.')).c_str());
+        // Extract main module name if module is like "mainmodule.submodule.subsubmodule"
+        const char* dot_pos = module.find('.');
+        if (dot_pos)
+        {
+            const std::string main_module(module.c_str(), dot_pos);
+            SCOREP_User_RegionSetGroup(region_handle.value, main_module.c_str());
+        }
+        else
+        {
+            SCOREP_User_RegionSetGroup(region_handle.value, module.c_str());
+        }
     }
     SCOREP_User_RegionEnter(region_handle.value);
 }

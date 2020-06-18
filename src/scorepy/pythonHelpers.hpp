@@ -1,5 +1,6 @@
 #pragma once
 
+#include "cstring.h"
 #include <Python.h>
 #include <frameobject.h>
 #include <string>
@@ -73,9 +74,10 @@ auto cast_to_PyFunc(TFunc* func) -> detail::ReplaceArgsToPyObject_t<TFunc>*
 
 /// Return the module name the frame belongs to.
 /// The pointer is valid for the lifetime of the frame
-const char* get_module_name(const PyFrameObject& frame);
+CString get_module_name(const PyFrameObject& frame);
 /// Return the file name the frame belongs to
-std::string get_file_name(const PyFrameObject& frame);
+/// The returned CString is valid until the next call to this function
+CString get_file_name(const PyFrameObject& frame);
 
 // Implementation details
 namespace detail
