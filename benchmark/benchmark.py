@@ -71,7 +71,7 @@ for test in args.test:
         max_reps_width = len(str(max(reps_x[test])))
         loop_counts = args.loop_count if args.loop_count else reps_x[test]
         for reps in loop_counts:
-            times = bench.call(test, [reps],
+            times = bench.call(test, [str(reps)],
                                scorep_settings=scorep_settings)
             times = np.array(times)
             print("{:>{width}}: Range={:{prec}}-{:{prec}} Mean={:{prec}} Median={:{prec}}".format(
