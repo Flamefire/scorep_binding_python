@@ -68,8 +68,8 @@ for test in args.test:
         print("#########")
         print("{}: {}".format(test, scorep_settings))
         print("#########")
-        max_reps_width = len(str(max(reps_x[test])))
         loop_counts = args.loop_count if args.loop_count else reps_x[test]
+        max_reps_width = len(str(max(loop_counts)))
         for reps in loop_counts:
             times = bench.call(test, [str(reps)],
                                scorep_settings=scorep_settings)
