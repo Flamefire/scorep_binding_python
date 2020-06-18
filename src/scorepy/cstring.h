@@ -12,7 +12,7 @@ class CString
     const char* s_;
 
 public:
-    constexpr CString(const char* s) : s_(s)
+    CString(const char* s) : s_(s)
     {
         assert(s_);
     }
