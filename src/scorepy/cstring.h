@@ -10,9 +10,21 @@ namespace scorepy
 class CString
 {
     const char* s_;
+    size_t len_;
 
 public:
-    CString(const char* s) : s_(s)
+    template <size_t N>
+    constexpr CString(const char (&s)[N]) : s_(s), len_(N - 1u)
+    {
+        static_assert(N > 0, "Cannot handle empty char array");
+    }
+
+    explicit CString(const char* s, size_t len) : s_(s), len_(len)
+    {
+        assert(s_);
+    }
+
+    explicit CString(const char* s) : s_(s), len_(std::strlen(s_))
     {
         assert(s_);
     }
@@ -29,12 +41,12 @@ public:
     template <size_t N>
     bool starts_with(const char (&prefix)[N]) const
     {
-        return std::strncmp(s_, prefix, N - 1u) == 0;
+        return (len_ >= N - 1u) && (std::strncmp(s_, prefix, N - 1u) == 0);
     }
 
     friend bool operator==(const CString& lhs, const CString& rhs)
     {
-        return std::strcmp(lhs.s_, rhs.s_) == 0;
+        return (lhs.len_ == rhs.len_) && (std::memcmp(lhs.s_, rhs.s_, rhs.len_) == 0);
     }
     friend bool operator!=(const CString& lhs, const CString& rhs)
     {

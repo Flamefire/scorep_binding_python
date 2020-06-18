@@ -115,7 +115,7 @@ bool CInstrumenter::on_event(PyFrameObject& frame, int what, PyObject*)
     case PyTrace_CALL:
     {
         const PyCodeObject& code = *frame.f_code;
-        const CString name = PyUnicode_AsUTF8(code.co_name);
+        const CString name = get_string_from_python(*code.co_name);
         const CString module_name = get_module_name(frame);
         if (name != "_unsetprofile" && !module_name.starts_with("scorep"))
         {
@@ -129,7 +129,7 @@ bool CInstrumenter::on_event(PyFrameObject& frame, int what, PyObject*)
     case PyTrace_RETURN:
     {
         const PyCodeObject& code = *frame.f_code;
-        const CString name = PyUnicode_AsUTF8(code.co_name);
+        const CString name = get_string_from_python(*code.co_name);
         const CString module_name = get_module_name(frame);
         if (name != "_unsetprofile" && !module_name.starts_with("scorep"))
         {

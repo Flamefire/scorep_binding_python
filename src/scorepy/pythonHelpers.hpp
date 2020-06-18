@@ -72,6 +72,13 @@ auto cast_to_PyFunc(TFunc* func) -> detail::ReplaceArgsToPyObject_t<TFunc>*
     return reinterpret_cast<detail::ReplaceArgsToPyObject_t<TFunc>*>(func);
 }
 
+inline CString get_string_from_python(PyObject& o)
+{
+    Py_ssize_t len;
+    const char* s = PyUnicode_AsUTF8AndSize(&o, &len);
+    return CString(s, len);
+}
+
 /// Return the module name the frame belongs to.
 /// The pointer is valid for the lifetime of the frame
 CString get_module_name(const PyFrameObject& frame);
