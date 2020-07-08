@@ -36,12 +36,12 @@ public:
     /// Find the first occurrence of the character and return a pointer to it or NULL if not found
     const char* find(char c) const
     {
-        return std::strchr(s_, c);
+        return static_cast<const char*>(std::memchr(s_, c, len_));
     }
     template <size_t N>
     bool starts_with(const char (&prefix)[N]) const
     {
-        return (len_ >= N - 1u) && (std::strncmp(s_, prefix, N - 1u) == 0);
+        return (len_ >= N - 1u) && (std::memcmp(s_, prefix, N - 1u) == 0);
     }
 
     friend bool operator==(const CString& lhs, const CString& rhs)
