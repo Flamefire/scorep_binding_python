@@ -19,8 +19,7 @@ def call(arguments, expected_returncode=0, env=None):
             env=env,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE)
-        assert out.returncode == expected_returncode
-        stdout, stderr = (out.stdout, out.stderr)
+        returncode, stdout, stderr = (out.returncode, out.stdout, out.stderr)
     else:
         p = subprocess.Popen(
             arguments,
@@ -28,7 +27,10 @@ def call(arguments, expected_returncode=0, env=None):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE)
         stdout, stderr = p.communicate()
-        assert p.returncode == expected_returncode
+        returncode = p.returncode
+    if returncode:
+        print(stderr)
+    assert out.returncode == expected_returncode
     return stdout.decode("utf-8"), stderr.decode("utf-8")
 
 
