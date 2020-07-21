@@ -30,7 +30,7 @@ def call(arguments, expected_returncode=0, env=None):
         returncode = p.returncode
     if returncode:
         print(stderr)
-    assert out.returncode == expected_returncode
+    assert returncode == expected_returncode
     return stdout.decode("utf-8"), stderr.decode("utf-8")
 
 
