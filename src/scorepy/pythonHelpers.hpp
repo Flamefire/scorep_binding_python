@@ -76,7 +76,11 @@ auto cast_to_PyFunc(TFunc* func) -> detail::ReplaceArgsToPyObject_t<TFunc>*
 inline CString get_string_from_python(PyObject& o)
 {
     Py_ssize_t len;
+#if PY_MAJOR_VERSION >= 3
     const char* s = PyUnicode_AsUTF8AndSize(&o, &len);
+#else
+    const char* s = PyString_FromStringAndSize(&o, &len);
+#endif
     return CString(s, len);
 }
 
